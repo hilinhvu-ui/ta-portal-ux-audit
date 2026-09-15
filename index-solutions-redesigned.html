@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TA Portal — UX Audit Report</title>
+<style>
+:root{
+  --bg:#f6f7f9;
+  --surface:#fff;
+  --text:#18181b;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --soft:#fafafa;
+  --accent:#e94268;
+  --accent-soft:#fff5f7;
+  --green:#18794e;
+  --green-soft:#f1fbf5;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  line-height:1.6;
+}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
+aside{
+  position:sticky;top:0;height:100vh;overflow:auto;
+  background:#17171a;color:#fff;padding:26px 16px;
+}
+.brand{font-size:17px;font-weight:800;margin-bottom:4px}
+.aside-sub{font-size:11px;color:#9297a1;margin-bottom:24px}
+nav .group{
+  margin:18px 10px 6px;
+  font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#676b74
+}
+nav a{
+  display:block;padding:9px 10px;margin:2px 0;border-radius:8px;
+  color:#b8bbc4;text-decoration:none;font-size:13px
+}
+nav a:hover,nav a.active{background:#292a2f;color:#fff}
+main{width:100%;max-width:1460px;padding:42px 48px 88px}
+.hero{
+  padding:40px;border-radius:22px;
+  background:linear-gradient(135deg,#19191c,#2a2b31);
+  color:#fff;
+}
+.kicker{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#f2a9ba}
+h1{font-size:40px;line-height:1.1;margin:10px 0 14px;max-width:900px}
+h2{font-size:28px;margin:0 0 10px}
+h3{font-size:18px;margin:0}
+.hero p{max-width:880px;color:#d0d3da;font-size:15px;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.meta span{font-size:11px;padding:6px 9px;border:1px solid #44464e;border-radius:999px;color:#e4e6ea}
+section{margin-top:44px}
+.lead{margin:0;max-width:980px;color:var(--muted);font-size:15px}
+.flow-intro{
+  display:grid;grid-template-columns:150px 1fr;gap:14px;
+  margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff
+}
+.flow-intro b{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.05em}
+.flow-intro p{margin:0;font-size:14px}
+.visual{
+  margin-top:16px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:16px
+}
+.visual-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:10px}
+.visual-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.screen{
+  position:relative;border:1px solid #dfe2e7;border-radius:12px;overflow:hidden;background:#eef0f3
+}
+.screen img{display:block;width:100%;height:auto}
+.pin{
+  position:absolute;transform:translate(-50%,-50%);
+  width:16px;height:16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--accent);color:#fff;border:1.5px solid #fff;
+  box-shadow:0 2px 7px rgba(0,0,0,.25);
+  font-size:8px;font-weight:800;z-index:4
+}
+.line{
+  position:absolute;height:1px;background:rgba(233,66,104,.75);z-index:3
+}
+.line:after{
+  content:"";position:absolute;right:-2px;top:-2px;width:5px;height:5px;border-radius:50%;background:var(--accent)
+}
+.notes{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px
+}
+.note{
+  display:grid;grid-template-columns:24px 1fr;gap:9px;
+  padding:10px;background:#fafafa;border:1px solid #eceef1;border-radius:10px
+}
+.note-num{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--accent);color:#fff;font-size:10px;font-weight:800
+}
+.note b{display:block;font-size:12px;margin-bottom:2px}
+.note span{display:block;font-size:11px;color:var(--muted)}
+.findings{display:grid;grid-template-columns:1fr;gap:12px;margin-top:16px}
+.finding{
+  border:1px solid var(--line);background:#fff;border-radius:16px;overflow:hidden
+}
+.finding-head{padding:16px 18px 10px}
+.finding-id{
+  font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.07em;font-weight:800;margin-bottom:4px
+}
+.finding-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:0 18px 18px
+}
+.cell{
+  padding:12px;border:1px solid #ededed;border-radius:10px;background:#fafafa;font-size:12px
+}
+.cell b{
+  display:block;margin-bottom:5px;font-size:10px;color:#6b7280;
+  text-transform:uppercase;letter-spacing:.05em
+}
+.summary-box{
+  margin-top:16px;padding:18px;border:1px solid #f2c7d1;border-radius:14px;background:var(--accent-soft)
+}
+.summary-box h3{margin-bottom:5px}
+.summary-box p{margin:0;font-size:13px;color:#4b5563}
+.process{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px
+}
+.step{
+  position:relative;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff
+}
+.step:not(:last-child):after{
+  content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);
+  width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:12px
+}
+.step small{display:block;font-size:10px;color:#9ca3af;font-weight:800;margin-bottom:5px}
+.step b{display:block;font-size:12px;margin-bottom:4px}
+.step p{font-size:11px;color:var(--muted);margin:0}
+.patterns,.solutions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.pattern,.solution{
+  padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff
+}
+.pattern .n,.solution .n{
+  font-size:10px;font-weight:800;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px
+}
+.pattern p,.solution p{margin:6px 0 0;color:var(--muted);font-size:12px}
+.solution{background:var(--green-soft);border-color:#cbe8d7}
+
+.solution .n{color:var(--green)}
+
+.solution-roadmap{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:18px;
+}
+.solution-card{
+  position:relative;
+  padding:18px 18px 17px 64px;
+  border:1px solid #dfe5e2;
+  border-radius:16px;
+  background:#fff;
+}
+.solution-card .solution-index{
+  position:absolute;
+  left:18px;
+  top:18px;
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:var(--green-soft);
+  color:var(--green);
+  font-size:11px;
+  font-weight:800;
+}
+.solution-card .solution-tag{
+  display:inline-block;
+  margin-bottom:6px;
+  font-size:9px;
+  line-height:1;
+  padding:5px 7px;
+  border-radius:999px;
+  background:#f3f4f6;
+  color:#6b7280;
+  font-weight:800;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+.solution-card h3{
+  font-size:15px;
+  line-height:1.35;
+  margin-bottom:9px;
+}
+.solution-card p{
+  margin:0;
+  font-size:12px;
+  color:var(--muted);
+}
+.solution-detail{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:13px;
+}
+.solution-detail div{
+  padding:10px;
+  border-radius:10px;
+  background:#fafafa;
+  border:1px solid #eef0f2;
+  font-size:11px;
+  color:#4b5563;
+}
+.solution-detail b{
+  display:block;
+  margin-bottom:3px;
+  font-size:9px;
+  color:#7b818b;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.solution-featured{
+  grid-column:1/-1;
+  padding:21px;
+  border:1px solid #bcdcca;
+  border-radius:18px;
+  background:linear-gradient(135deg,#f2fbf6,#ffffff);
+}
+.solution-featured-head{
+  display:grid;
+  grid-template-columns:42px 1fr;
+  gap:13px;
+  align-items:start;
+}
+.solution-featured .solution-index{
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:11px;
+  background:#dff4e7;
+  color:var(--green);
+  font-size:11px;
+  font-weight:800;
+}
+.solution-featured h3{
+  margin:1px 0 7px;
+  font-size:17px;
+}
+.solution-featured .intro{
+  margin:0;
+  max-width:1000px;
+  color:#5f6874;
+  font-size:12px;
+}
+.solution-benefits{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-top:15px;
+}
+.solution-benefit{
+  padding:12px;
+  border:1px solid #dcece2;
+  border-radius:11px;
+  background:rgba(255,255,255,.8);
+}
+.solution-benefit b{
+  display:block;
+  font-size:11px;
+  margin-bottom:3px;
+}
+.solution-benefit span{
+  display:block;
+  font-size:10.5px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.solution-outcome{
+  margin-top:12px;
+  padding:12px 14px;
+  border-radius:11px;
+  background:#fff;
+  border-left:3px solid var(--green);
+  color:#475569;
+  font-size:11.5px;
+}
+
+
+.design-system-box{grid-column:1/-1;margin-top:2px;padding:18px;border:1px solid #cfd8e3;border-radius:14px;background:#f8fafc}
+.design-system-box h3{margin-bottom:6px}
+.design-system-box>p{margin:0;color:var(--muted);font-size:12px;max-width:980px}
+.ds-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.ds-layer{padding:13px;border:1px solid #e3e8ef;border-radius:11px;background:#fff}
+.ds-layer small{display:block;font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.ds-layer b{display:block;font-size:12px;margin-bottom:4px}
+.ds-layer p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+.ds-value{margin-top:12px;padding:12px 14px;border-left:3px solid var(--green);background:#fff;border-radius:0 10px 10px 0;font-size:12px;color:#475569}
+footer{margin-top:50px;color:#9ca3af;font-size:11px}
+@media(max-width:1100px){
+  .layout{grid-template-columns:1fr}
+  aside{position:relative;height:auto}
+  main{padding:26px}
+  .finding-grid{grid-template-columns:1fr 1fr}
+  .process{grid-template-columns:1fr}
+  .step:not(:last-child):after{content:"↓";right:auto;left:50%;top:auto;bottom:-18px;transform:translateX(-50%)}
+  .patterns,.solutions,.notes{grid-template-columns:1fr}
+  .ds-grid{grid-template-columns:1fr}
+  .solution-roadmap{grid-template-columns:1fr}
+  .solution-benefits{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  h1{font-size:32px}
+  .solution-detail{grid-template-columns:1fr}
+  .solution-benefits{grid-template-columns:1fr}
+  .finding-grid{grid-template-columns:1fr}
+  .flow-intro{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand">TA Portal UX Audit</div>
+  <div class="aside-sub">Báo cáo đánh giá trải nghiệm người dùng</div>
+  <nav>
+    <a class="active" href="#overview">01 · Tổng quan</a>
+    <div class="group">Audit theo luồng</div>
+    <a href="#allotment">02 · My Allotment</a>
+    <a href="#individual">03 · Add Individual</a>
+    <a href="#booking">04 · Booking List</a>
+    <div class="group">Tổng hợp</div>
+    <a href="#patterns">05 · Vấn đề xuyên suốt</a>
+    <a href="#solutions">06 · Đề xuất cải thiện UX</a>
+  </nav>
+</aside>
+
+<main>
+  <div class="hero">
+    <div class="kicker">UX Audit Report · TA Portal</div>
+    <h1>Đánh giá các vấn đề UX trong 3 luồng nghiệp vụ chính</h1>
+    <p>Báo cáo tập trung vào cách người dùng tìm quỹ phòng, tạo booking khách lẻ và quản lý booking. Mỗi finding được trình bày theo cùng một cấu trúc: Quan sát trên giao diện → Vấn đề UX → Ảnh hưởng → Hướng cải thiện.</p>
+    <div class="meta"><span>My Allotment</span><span>Add Individual</span><span>Booking List</span><span>Expert Review + Business Rules</span></div>
+  </div>
+
+  <section id="overview">
+    <h2>01. Tổng quan</h2>
+    <p class="lead">Hệ thống đã bao phủ được phần lớn nghiệp vụ cần thiết. Vấn đề chính không nằm ở việc thiếu chức năng, mà ở cách thông tin và trạng thái được tổ chức: người dùng vẫn phải tự liên kết nhiều dữ liệu, tự nhớ trình tự nghiệp vụ và tự kiểm tra một số trạng thái đang được áp dụng.</p>
+    <div class="summary-box">
+      <h3>Phạm vi đánh giá</h3>
+      <p>Báo cáo chỉ ghi nhận những vấn đề có thể quan sát được từ thiết kế và quy tắc nghiệp vụ đã cung cấp. Không đánh giá dữ liệu mẫu trong Figma như dữ liệu thực tế.</p>
+    </div>
+  </section>
+
+  <section id="allotment">
+    <h2>02. My Allotment</h2>
+    <div class="flow-intro"><b>Mục tiêu người dùng</b><p>Xác định nhanh khách sạn, hạng phòng, ngày còn quỹ phòng và mức giá phù hợp trước khi tạo booking.</p></div>
+
+    <div class="visual">
+      <div class="visual-head"><div><h3>Toàn màn hình · My Allotment</h3><p>Đánh dấu các điểm gây khó khăn khi đọc và tra cứu quỹ phòng.</p></div></div>
+      <div class="screen">
+        <img src="https://www.figma.com/api/mcp/asset/52ad1312-cca6-4038-9a23-457bb6f1ea6e.png" alt="My Allotment">
+        <div class="line" style="left:51%;top:48%;width:4%"></div><div class="pin" style="left:50%;top:48%">1</div>
+        <div class="line" style="left:53%;top:25%;width:3%"></div><div class="pin" style="left:52%;top:25%">2</div>
+        <div class="line" style="left:92%;top:12%;width:3%"></div><div class="pin" style="left:91%;top:12%">3</div>
+        <div class="line" style="left:27%;top:93%;width:3%"></div><div class="pin" style="left:26%;top:93%">4</div>
+      </div>
+      <div class="notes">
+        <div class="note"><div class="note-num">1</div><div><b>Bảng khó quét nhanh</b><span>Nhiều ngày và nhiều giá trị được hiển thị đồng thời trên một ma trận rộng.</span></div></div>
+        <div class="note"><div class="note-num">2</div><div><b>“10 / 20” chưa tự giải thích</b><span>Người mới khó biết ngay đây là số phòng khả dụng / tổng số phòng.</span></div></div>
+        <div class="note"><div class="note-num">3</div><div><b>Điều kiện lọc đang áp dụng bị ẩn</b><span>Khi đóng Advanced Search, người dùng không thấy rõ mình đang lọc theo tiêu chí nào.</span></div></div>
+        <div class="note"><div class="note-num">4</div><div><b>Màu đang mang quá nhiều ý nghĩa</b><span>Cuối tuần, ngày lễ, còn phòng và hết phòng cùng dựa nhiều vào màu sắc.</span></div></div>
+      </div>
+    </div>
+
+    <div class="findings">
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 01</div><h3>Mật độ thông tin cao làm giảm khả năng đọc nhanh</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Bảng trải rộng theo nhiều ngày; mỗi ô đồng thời chứa số phòng và giá.</div>
+          <div class="cell"><b>Vấn đề UX</b>Người dùng phải đọc từng ô thay vì nhận biết nhanh ngày/phòng nào cần chú ý.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Tăng thời gian tra cứu và cuộn ngang khi phạm vi ngày lớn.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Giảm số ngày hiển thị mặc định; thêm điều hướng khoảng ngày và làm rõ thông tin chính/phụ trong ô.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 02</div><h3>Trạng thái tìm kiếm nâng cao chưa được giữ visible sau khi áp dụng</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Advanced Search có nhiều điều kiện nhưng khi đóng panel, chỉ còn badge số lượng.</div>
+          <div class="cell"><b>Vấn đề UX</b>Người dùng không biết chính xác điều kiện nào vẫn đang tác động tới kết quả.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Dễ hiểu sai rằng không có dữ liệu trong khi nguyên nhân có thể là filter đang còn hiệu lực.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Hiển thị filter chip dưới vùng tìm kiếm và cho phép xóa từng điều kiện hoặc xóa tất cả.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 03</div><h3>Luồng từ kiểm tra quỹ phòng sang tạo booking chưa giữ được ngữ cảnh</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>CTA tạo Individual/Group là thao tác chung, tách khỏi dòng/ngày người dùng vừa kiểm tra.</div>
+          <div class="cell"><b>Vấn đề UX</b>Ngữ cảnh lựa chọn ở My Allotment chưa được truyền sang màn tạo booking.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Người dùng phải nhập/chọn lại thông tin đã xác định trước đó.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Cho phép tạo booking từ chính dòng/ngày được chọn và tự điền Hotel, Room Type, Allotment, Date.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="individual">
+    <h2>03. Add Individual</h2>
+    <div class="flow-intro"><b>Mục tiêu người dùng</b><p>Nhập thông tin khách và kỳ lưu trú, chọn phòng, kiểm tra giá/dịch vụ và hoàn tất booking với ít thao tác sai nhất.</p></div>
+
+    <div class="visual">
+      <div class="visual-head"><div><h3>Toàn màn hình · Add Individual</h3><p>Trọng tâm đánh giá: phân cấp thông tin, mối liên hệ giữa các phần và khả năng nhận biết trạng thái.</p></div></div>
+      <div class="screen">
+        <img src="https://www.figma.com/api/mcp/asset/a7719f10-9ccb-462d-b454-734874e0f29b.png" alt="Add Individual">
+        <div class="line" style="left:7%;top:27%;width:3%"></div><div class="pin" style="left:6%;top:27%">1</div>
+        <div class="line" style="left:34%;top:31.5%;width:4%"></div><div class="pin" style="left:33%;top:31.5%">2</div>
+        <div class="line" style="left:25%;top:42%;width:4%"></div><div class="pin" style="left:24%;top:42%">3</div>
+        <div class="line" style="left:84%;top:17%;width:3%"></div><div class="pin" style="left:83%;top:17%">4</div>
+        <div class="line" style="left:57%;top:58%;width:4%"></div><div class="pin" style="left:56%;top:58%">5</div>
+      </div>
+      <div class="notes">
+        <div class="note"><div class="note-num">1</div><div><b>Các nhóm thông tin chưa tạo thành một flow</b><span>General / Booking / Detail trông như những phần độc lập.</span></div></div>
+        <div class="note"><div class="note-num">2</div><div><b>Cụm tìm kiếm/lọc khó nhận biết là control</b><span>Hotel, Source, Room Type, Package, From-To giống một dòng text liên tục.</span></div></div>
+        <div class="note"><div class="note-num">3</div><div><b>Room card chưa có hierarchy và selected state đủ rõ</b><span>Thông tin chính/phụ và trạng thái lựa chọn chưa tách biệt mạnh.</span></div></div>
+        <div class="note"><div class="note-num">4</div><div><b>Detail Information chưa thể hiện vai trò tổng hợp</b><span>Khối bên phải giống thông tin phụ hơn là kết quả của booking.</span></div></div>
+        <div class="note"><div class="note-num">5</div><div><b>Thiếu trạng thái hoàn thành theo section</b><span>Khó biết phần nào đã đủ dữ liệu và phần nào cần kiểm tra tiếp.</span></div></div>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <h3>Vấn đề cốt lõi</h3>
+      <p>Màn hình không thiếu dữ liệu; vấn đề là các dữ liệu chưa được tổ chức thành một quy trình dễ hiểu. Người dùng đang phải tự liên kết Guest, Stay, Room, Rate, Service và tổng tiền trong đầu.</p>
+    </div>
+
+    <div class="process">
+      <div class="step"><small>Bước 1</small><b>Guest & Stay</b><p>Khách, số người, ngày lưu trú.</p></div>
+      <div class="step"><small>Bước 2</small><b>Room Information</b><p>Chọn phòng và điều kiện áp dụng.</p></div>
+      <div class="step"><small>Bước 3</small><b>Rate Information</b><p>Hệ thống tạo/cập nhật dữ liệu theo ngày.</p></div>
+      <div class="step"><small>Bước 4</small><b>Special Service</b><p>Dịch vụ bổ sung tác động tới chi phí.</p></div>
+      <div class="step"><small>Bước 5</small><b>Booking Summary</b><p>Tổng hợp chi phí và trạng thái cuối.</p></div>
+    </div>
+
+    <div class="findings">
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 01</div><h3>Phân cấp thông tin chưa phản ánh trình tự tạo booking</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>General Information, Booking Information và Detail Information là các khối lớn có trọng số gần nhau.</div>
+          <div class="cell"><b>Vấn đề UX</b>Giao diện chưa cho thấy rõ phần nào cần làm trước và phần nào là kết quả của phần trước.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Người dùng phải tự nhớ quy trình nghiệp vụ và dễ bỏ sót bước.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Tổ chức hierarchy theo Guest & Stay → Room & Rate → Service → Booking Summary.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 02</div><h3>Mối liên hệ giữa các phần dữ liệu chưa được thể hiện</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Stay, Room, Rate, Service và Summary nằm trong các khu vực tách biệt.</div>
+          <div class="cell"><b>Vấn đề UX</b>UI chưa cho thấy dữ liệu ở bước trước đang tạo hoặc thay đổi dữ liệu ở bước sau.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Khi đổi ngày/phòng/dịch vụ, người dùng khó biết phần nào khác cần kiểm tra lại.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Thể hiện feedback cập nhật và trạng thái phụ thuộc giữa các section.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 03</div><h3>Các trường tìm kiếm/lọc trong Room Information chưa rõ khả năng thao tác</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Hotel, Source, Room Type, Package và From-To nằm trên một hàng và phân tách chủ yếu bằng đường dọc.</div>
+          <div class="cell"><b>Vấn đề UX</b>Ranh giới giữa label, value và control chưa rõ; affordance dropdown/date picker yếu.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Người dùng phải đọc kỹ để biết trường nào đang áp dụng và chỗ nào có thể chỉnh.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Tách từng field thành control rõ hơn, label riêng, vùng click rõ, value được nhấn mạnh hơn label.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 04</div><h3>Room card chưa hỗ trợ tốt việc đọc nhanh và nhận biết lựa chọn</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Tên phòng, label, value, badge và giá có mức độ nhấn mạnh khá gần nhau.</div>
+          <div class="cell"><b>Vấn đề UX</b>Khó xác định thông tin chính/phụ; card cũng chưa tạo affordance rõ đây là thành phần có thể chọn.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Người dùng phải quan sát kỹ từng card và dễ mất dấu card đang được chọn.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Tạo hierarchy rõ trong card và selected/hover state mạnh hơn bằng nền, dấu chọn hoặc trạng thái “Đã chọn”.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 05</div><h3>Detail Information chưa thể hiện đúng vai trò là kết quả tổng hợp</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Khối bên phải đứng riêng và có tên khá chung.</div>
+          <div class="cell"><b>Vấn đề UX</b>Chưa thể hiện rõ Room Charge, Service Charge và Total là kết quả từ các lựa chọn bên trái.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Người dùng khó hiểu lựa chọn nào vừa làm thay đổi tổng chi phí.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Đổi thành Booking Summary/Payment Summary và nhấn mạnh đây là phần tổng hợp cập nhật theo booking.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 06</div><h3>Thiếu trạng thái hoàn thành của từng section</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Các section gần như có cùng trạng thái hiển thị dù dữ liệu đã đủ hay còn thiếu.</div>
+          <div class="cell"><b>Vấn đề UX</b>Người dùng không biết phần nào đã hoàn tất và phần nào cần xử lý tiếp.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Phải tự rà lại màn hình dài trước khi gửi booking.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Hiển thị trạng thái tại section: Hoàn tất ✓ / Chưa đủ thông tin / Có lỗi ⚠.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="booking">
+    <h2>04. Booking List</h2>
+    <div class="flow-intro"><b>Mục tiêu người dùng</b><p>Tìm đúng booking nhanh, hiểu trạng thái hiện tại và thực hiện đúng hành động được phép.</p></div>
+
+    <div class="visual">
+      <div class="visual-head"><div><h3>Toàn màn hình · Booking List</h3><p>Đánh dấu các điểm ảnh hưởng tới khả năng rà quét và thao tác trên danh sách.</p></div></div>
+      <div class="screen">
+        <img src="https://www.figma.com/api/mcp/asset/f56351bd-c8cf-4678-b32b-fbf79591282b.png" alt="Booking List">
+        <div class="line" style="left:19%;top:53%;width:4%"></div><div class="pin" style="left:18%;top:53%">1</div>
+        <div class="line" style="left:93%;top:47%;width:2.5%"></div><div class="pin" style="left:92%;top:47%">2</div>
+        <div class="line" style="left:93%;top:12%;width:2.5%"></div><div class="pin" style="left:92%;top:12%">3</div>
+        <div class="line" style="left:69%;top:54%;width:3%"></div><div class="pin" style="left:68%;top:54%">4</div>
+      </div>
+      <div class="notes">
+        <div class="note"><div class="note-num">1</div><div><b>Bảng có mật độ thông tin cao</b><span>Nhiều cột cùng lúc làm giảm tốc độ rà quét.</span></div></div>
+        <div class="note"><div class="note-num">2</div><div><b>Action chưa luôn phụ thuộc trạng thái</b><span>Một số thao tác có thể vẫn xuất hiện khi booking không còn cho phép thực hiện.</span></div></div>
+        <div class="note"><div class="note-num">3</div><div><b>Filter state chưa visible</b><span>Người dùng không thấy rõ toàn bộ điều kiện đang giới hạn danh sách.</span></div></div>
+        <div class="note"><div class="note-num">4</div><div><b>Status chưa hỗ trợ ưu tiên công việc</b><span>Nhiều màu giúp phân biệt nhưng chưa giúp hiểu booking nào cần xử lý trước.</span></div></div>
+      </div>
+    </div>
+
+    <div class="visual">
+      <div class="visual-head"><div><h3>Advanced Search · Booking List</h3><p>Phân biệt rõ vai trò của Quick Search và Advanced Search.</p></div></div>
+      <div class="screen">
+        <img src="https://www.figma.com/api/mcp/asset/06960e53-1235-4e54-8087-94ac2ad1f494.png" alt="Booking List Advanced Search">
+        <div class="line" style="left:82%;top:28%;width:3%"></div><div class="pin" style="left:81%;top:28%">5</div>
+        <div class="line" style="left:93%;top:28%;width:2.5%"></div><div class="pin" style="left:92%;top:28%">6</div>
+      </div>
+      <div class="notes">
+        <div class="note"><div class="note-num">5</div><div><b>Advanced Search lặp lại Quick Search</b><span>Booking No/Guest Name xuất hiện ở cả hai khu vực, làm vai trò của từng kiểu tìm kiếm chưa rõ.</span></div></div>
+        <div class="note"><div class="note-num">6</div><div><b>Icon bút chì gây hiểu sai chức năng</b><span>Pencil thường được hiểu là Edit, không phù hợp với trường tìm kiếm.</span></div></div>
+      </div>
+    </div>
+
+    <div class="findings">
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 01</div><h3>Danh sách có quá nhiều thông tin ở cùng một mức ưu tiên</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Nhiều cột thông tin được hiển thị đồng thời trong bảng.</div>
+          <div class="cell"><b>Vấn đề UX</b>Người dùng phải đọc nhiều dữ liệu phụ trước khi xác định booking cần xử lý.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Giảm tốc độ scan và tăng cuộn ngang.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Giữ mặc định các cột giúp nhận diện và ra quyết định; phần còn lại đưa vào detail/column settings.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 02</div><h3>Hành động chưa luôn phản ánh trạng thái booking</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Các action được trình bày tương tự ở nhiều trạng thái.</div>
+          <div class="cell"><b>Vấn đề UX</b>UI có thể cho phép user bấm một hành động mà nghiệp vụ không cho phép.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Tạo thao tác thừa và cảm giác hệ thống thiếu nhất quán.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Thiết kế action theo status: chỉ hiển thị hoặc enable những hành động hợp lệ.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 03</div><h3>Search và filter chưa cho thấy đầy đủ trạng thái đang áp dụng</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Quick Search và Advanced Search cùng tác động tới danh sách.</div>
+          <div class="cell"><b>Vấn đề UX</b>Khi panel đóng, người dùng không nhìn thấy đầy đủ điều kiện hiện tại.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Khó hiểu vì sao kết quả bị thu hẹp hoặc không có dữ liệu.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Hiển thị filter chip và tách rõ Quick Search = tìm nhanh, Advanced Search = thu hẹp kết quả.</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-head"><div class="finding-id">Finding 04</div><h3>Status đang giúp phân biệt nhưng chưa giúp ưu tiên công việc</h3></div>
+        <div class="finding-grid">
+          <div class="cell"><b>Quan sát</b>Nhiều trạng thái được phân biệt bằng màu.</div>
+          <div class="cell"><b>Vấn đề UX</b>User vẫn phải nhớ lifecycle để biết booking nào cần chú ý trước.</div>
+          <div class="cell"><b>Ảnh hưởng</b>Tăng tải ghi nhớ khi số lượng booking lớn.</div>
+          <div class="cell"><b>Hướng cải thiện</b>Bổ sung view theo intent như Cần xử lý / Sắp tới / Đang lưu trú / Đã hoàn tất.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="patterns">
+    <h2>05. Vấn đề UX xuyên suốt hệ thống</h2>
+    <p class="lead">Các pattern dưới đây được rút ra từ những finding đã xuất hiện ở nhiều màn, không phải là lỗi mới.</p>
+    <div class="patterns">
+      <div class="pattern"><div class="n">Pattern 01</div><h3>Phân cấp theo dữ liệu hơn là theo tác vụ</h3><p>Nhiều màn hình cho thấy cấu trúc dữ liệu khá rõ, nhưng chưa luôn cho thấy người dùng cần làm gì trước và đâu là thông tin chính.</p></div>
+      <div class="pattern"><div class="n">Pattern 02</div><h3>Trạng thái hệ thống chưa đủ visible</h3><p>Filter đang áp dụng, section đã hoàn tất hay action có hợp lệ không vẫn cần người dùng tự kiểm tra.</p></div>
+      <div class="pattern"><div class="n">Pattern 03</div><h3>Mối liên hệ giữa các phần chưa được thể hiện</h3><p>Dữ liệu có dependency nhưng UI chưa luôn cho thấy phần nào tạo hoặc làm thay đổi phần nào.</p></div>
+      <div class="pattern"><div class="n">Pattern 04</div><h3>Ngữ cảnh chưa được giữ xuyên luồng</h3><p>Một số thông tin đã xác định ở màn trước chưa được truyền sang màn sau, dẫn tới nhập/chọn lại.</p></div>
+    </div>
+  </section>
+
+  
+<section id="solutions">
+  <h2>06. Đề xuất cải thiện UX</h2>
+  <p class="lead">Các giải pháp được gom theo mục tiêu cải thiện để dễ theo dõi hơn: mỗi đề xuất trả lời rõ <b>cần thay đổi gì</b> và <b>giá trị mang lại cho người dùng/hệ thống</b>.</p>
+
+  <div class="solution-roadmap">
+    <div class="solution-card">
+      <div class="solution-index">01</div>
+      <span class="solution-tag">Information Architecture</span>
+      <h3>Tổ chức màn hình theo trình tự nghiệp vụ</h3>
+      <p>Sắp xếp thông tin theo cách người dùng thực hiện công việc, thay vì theo cách dữ liệu được lưu trong hệ thống.</p>
+      <div class="solution-detail">
+        <div><b>Làm gì</b>Nhóm lại section theo trình tự: Guest & Stay → Room → Rate → Service → Summary.</div>
+        <div><b>Giá trị</b>Giảm việc phải tự suy luận bước tiếp theo và giúp người mới học hệ thống nhanh hơn.</div>
+      </div>
+    </div>
+
+    <div class="solution-card">
+      <div class="solution-index">02</div>
+      <span class="solution-tag">System Status</span>
+      <h3>Hiển thị trạng thái hệ thống rõ ràng hơn</h3>
+      <p>Người dùng cần biết dữ liệu nào đang được áp dụng, phần nào đã hoàn tất và phần nào cần xử lý tiếp.</p>
+      <div class="solution-detail">
+        <div><b>Làm gì</b>Hiển thị active filter, selected state, trạng thái section và trạng thái booking rõ ràng.</div>
+        <div><b>Giá trị</b>Giảm thao tác kiểm tra lại và hạn chế lỗi do người dùng hiểu sai trạng thái hiện tại.</div>
+      </div>
+    </div>
+
+    <div class="solution-card">
+      <div class="solution-index">03</div>
+      <span class="solution-tag">Data Relationship</span>
+      <h3>Làm rõ mối liên hệ giữa các nhóm dữ liệu</h3>
+      <p>Các trường và section có quan hệ phụ thuộc cần được thể hiện như một chuỗi logic thay vì các khối độc lập.</p>
+      <div class="solution-detail">
+        <div><b>Làm gì</b>Làm rõ dữ liệu đầu vào, dữ liệu hệ thống sinh ra và kết quả cuối cùng.</div>
+        <div><b>Giá trị</b>Giúp người dùng hiểu vì sao Rate, Service hoặc Summary thay đổi theo thông tin booking.</div>
+      </div>
+    </div>
+
+    <div class="solution-card">
+      <div class="solution-index">04</div>
+      <span class="solution-tag">Cross-flow</span>
+      <h3>Giữ lại ngữ cảnh khi chuyển giữa các màn hình</h3>
+      <p>Khi người dùng đã chọn khách sạn, ngày hoặc loại phòng ở bước trước, hệ thống nên tận dụng dữ liệu đó ở bước tiếp theo.</p>
+      <div class="solution-detail">
+        <div><b>Làm gì</b>Prefill thông tin khi đi từ My Allotment sang Add Individual hoặc các luồng liên quan.</div>
+        <div><b>Giá trị</b>Giảm nhập lại dữ liệu và tạo cảm giác luồng nghiệp vụ liền mạch hơn.</div>
+      </div>
+    </div>
+
+    <div class="solution-card">
+      <div class="solution-index">05</div>
+      <span class="solution-tag">Readability & Interaction</span>
+      <h3>Tăng khả năng quét nhanh và nhận biết tương tác</h3>
+      <p>Giảm các khối có trọng số thị giác ngang nhau và làm rõ đâu là thông tin chính, phụ và phần có thể thao tác.</p>
+      <div class="solution-detail">
+        <div><b>Làm gì</b>Tách label/value, tăng selected state, làm rõ filter/control và tối ưu bảng dữ liệu.</div>
+        <div><b>Giá trị</b>Giúp người dùng tìm thông tin và ra quyết định nhanh hơn trên màn hình có mật độ dữ liệu cao.</div>
+      </div>
+    </div>
+
+    <div class="solution-featured">
+      <div class="solution-featured-head">
+        <div class="solution-index">06</div>
+        <div>
+          <span class="solution-tag">Design System</span>
+          <h3>Xây dựng Design System dùng chung cho các hệ thống quản lý trong ngành khách sạn</h3>
+          <p class="intro">Tạo một nền tảng thiết kế thống nhất để các dự án quản lý dữ liệu và vận hành khách sạn có thể tái sử dụng component, pattern và quy chuẩn tương tác thay vì thiết kế lại từ đầu cho từng hệ thống.</p>
+        </div>
+      </div>
+
+      <div class="solution-benefits">
+        <div class="solution-benefit"><b>Nhất quán</b><span>Cùng một chức năng có cùng cách hiển thị và hành vi giữa các hệ thống.</span></div>
+        <div class="solution-benefit"><b>Dễ mở rộng</b><span>Có thể bổ sung module hoặc nghiệp vụ mới dựa trên pattern đã có.</span></div>
+        <div class="solution-benefit"><b>Dễ thay đổi nghiệp vụ</b><span>Cập nhật component và pattern đồng bộ khi quy trình khách sạn thay đổi.</span></div>
+        <div class="solution-benefit"><b>Thiết kế nhanh hơn</b><span>Designer không cần tạo lại các thành phần lặp lại cho từng dự án.</span></div>
+        <div class="solution-benefit"><b>Phát triển nhanh hơn</b><span>Developer có thư viện chuẩn để triển khai và tái sử dụng.</span></div>
+        <div class="solution-benefit"><b>Dễ bảo trì</b><span>Giảm sai lệch UI và thuận tiện nâng cấp khi sản phẩm ngày càng lớn.</span></div>
+      </div>
+
+      <div class="solution-outcome"><b>Giá trị tổng thể:</b> biến Design System thành nền tảng giúp nhiều hệ thống quản lý khách sạn có thể phát triển nhanh, mở rộng dễ và duy trì trải nghiệm nhất quán trong dài hạn.</div>
+    </div>
+  </div>
+</section>
+
+  <footer>TA Portal UX Audit · Refactored report · Screens sourced from the supplied Figma design.</footer>
+</main>
+</div>
+
+<script>
+const links=[...document.querySelectorAll('nav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    links.forEach(a=>a.classList.remove('active'));
+    const a=links.find(x=>x.getAttribute('href')==='#'+e.target.id);
+    if(a)a.classList.add('active');
+  }
+}),{rootMargin:'-35% 0px -55% 0px'});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
